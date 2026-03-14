@@ -91,8 +91,7 @@ class FilamentCalculatorServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            Css::make('calculator-styles', __DIR__ . '/../resources/css/index.css')
-                ->loadedOnRequest(),
+            Css::make('calculator-styles', __DIR__ . '/../resources/css/calculator.css'),
         ];
     }
 

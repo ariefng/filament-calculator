@@ -1,17 +1,43 @@
 # Filament Calculator
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/ariefng/filament-calculator/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariefng/filament-calculator/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/ariefng/filament-calculator/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/ariefng/filament-calculator/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
+[![Latest Version](https://img.shields.io/packagist/v/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
 
+Provides a calculator modal action for Filament `TextInput` fields in Filament Admin Panel.
 
-
-Provides a calculator modal action for Filament `TextInput` fields in panels and standalone forms.
-
-Supports Filament v4 and v5.
+> **Note:** Supports Filament **v4** and **v5**. For changes and updates, see the [CHANGELOG](CHANGELOG.md).
 
 ![Filament Calculator modal](resources/images/calculator-modal.png)
+
+## Table of Contents
+
+-   [Features](#features)
+-   [Requirements](#requirements)
+-   [Installation](#installation)
+-   [Quick Start](#quick-start)
+-   [Usage](#usage)
+-   [Configuration](#configuration)
+-   [Styling](#styling)
+-   [Testing](#testing)
+-   [Contributing](#contributing)
+-   [Security Vulnerabilities](#security-vulnerabilities)
+-   [Credits](#credits)
+-   [License](#license)
+
+## Features
+
+-   🖼️ **Calculator Modal** - Full-featured calculator with basic arithmetic operations
+-   🔧 **Flexible Attachment** - Attach as prefix or suffix action to any TextInput
+-   ⚙️ **Configurable** - Customize icon, color, modal width, and more
+-   🌐 **Multi-language** - Built-in translations for English and Indonesian
+-   🔢 **Digit Limit** - Configurable maximum digits for input validation
+-   ⚡ **Zero Configuration** - Works out of the box with sensible defaults
+-   🎨 **Responsive** - Works seamlessly on desktop and mobile
+
+## Requirements
+
+-   PHP 8.2+
+-   Laravel 10.0+ (for Panels) or standalone Forms package
+-   Filament 4.0 or 5.0
 
 ## Installation
 
@@ -21,13 +47,13 @@ Install the package via Composer:
 composer require ariefng/filament-calculator
 ```
 
-Publish the package configuration:
+Publish the package configuration (optional):
 
 ```bash
 php artisan vendor:publish --tag="filament-calculator-config"
 ```
 
-Publish the package translations if you want to customize the labels:
+Publish the package translations (optional):
 
 ```bash
 php artisan vendor:publish --tag="filament-calculator-translations"
@@ -35,13 +61,7 @@ php artisan vendor:publish --tag="filament-calculator-translations"
 
 Currently, the package ships with translations for English (`en`) and Indonesian (`id`) only.
 
-Register the package assets with Filament:
-
-```bash
-php artisan filament:assets
-```
-
-If you are using Filament Panels, you may also register the plugin in your panel provider:
+If you are using Filament Panels, register the plugin in your panel provider:
 
 ```php
 use Ariefng\FilamentCalculator\CalculatorPlugin;
@@ -54,7 +74,7 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-## Usage
+## Quick Start
 
 Attach the calculator action to a `TextInput` using `prefixAction()` or `suffixAction()`:
 
@@ -64,9 +84,7 @@ use Filament\Forms\Components\TextInput;
 
 TextInput::make('amount')
     ->suffixAction(CalculatorAction::make());
-```
 
-```php
 TextInput::make('amount')
     ->prefixAction(CalculatorAction::make());
 ```
@@ -86,7 +104,7 @@ return [
     ],
 
     'insert_action' => [
-        'color' => 'primary',
+        'color' => 'gray',
         'icon' => 'heroicon-o-arrow-down-tray',
         'icon_position' => 'after',
     ],
@@ -99,7 +117,7 @@ Available options:
 - `action.icon`: calculator trigger icon. Default: `heroicon-o-calculator`.
 - `action.color`: calculator trigger color. Default: `gray`.
 - `action.modal_width`: modal width. Default: `sm`.
-- `insert_action.color`: insert button color. Default: `primary`.
+- `insert_action.color`: insert button color. Default: `gray`.
 - `insert_action.icon`: insert button icon. Default: `heroicon-o-arrow-down-tray`.
 - `insert_action.icon_position`: insert button icon position. Default: `after`.
 
@@ -125,27 +143,11 @@ return [
 
 ## Styling
 
-In an effort to align with Filament's theming methodology, you will need to use a custom theme to use this plugin.
+The calculator styles are automatically loaded globally - no need to run `php artisan filament:assets`.
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels, follow the Filament styling documentation for your Filament version first.
->
-> The following applies to both the Panels package and the standalone Forms package.
+If you need to customize the calculator's appearance, you can override the CSS by publishing the package's views and adding your custom styles to your application's CSS file.
 
-After setting up a custom theme, add the plugin's Blade source to your theme CSS file, or to your app CSS file if you are using the standalone Forms package:
-
-```css
-@source '../../../../vendor/ariefng/filament-calculator/resources/views/**/*';
-```
-
-The calculator stylesheet itself is registered through Filament's asset manager and lazy-loaded only when the calculator modal is rendered.
-
-If you update this package locally during development, re-run:
-
-```bash
-php artisan filament:assets
-php artisan optimize:clear
-```
+The calculator modal uses Filament's built-in styling system and will automatically match your panel's theme.
 
 ## Testing
 

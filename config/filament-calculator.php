@@ -10,7 +10,7 @@ return [
     ],
 
     'insert_action' => [
-        'color' => 'primary',
+        'color' => 'gray',
         'icon' => 'heroicon-o-arrow-down-tray',
         'icon_position' => 'after',
     ],
