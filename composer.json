@@ -49,10 +49,10 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
-        "lint": "pint",
+        "post-autoload-dump": "@php vendor/bin/testbench package:discover --ansi",
         "test": "pest",
-        "test:lint": "pint --test"
+        "lint": "pint --test",
+        "format": "pint"
     },
     "extra": {
         "laravel": {
@@ -68,8 +68,7 @@
         "sort-packages": true,
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
+            "pestphp/pest-plugin": true
         }
     }
 }
