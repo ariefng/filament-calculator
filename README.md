@@ -6,7 +6,7 @@ Provides a calculator modal action for Filament `TextInput` fields in Filament A
 
 > **Note:** Supports Filament **v4** and **v5**. For changes and updates, see the [CHANGELOG](CHANGELOG.md).
 
-![Filament Calculator modal](resources/images/calculator-modal.png)
+![Filament Calculator modal](resources/images/filament-calculator-plugin)
 
 ## Table of Contents
 
