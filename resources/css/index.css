@@ -1,1 +1,188 @@
-@import '../../vendor/filament/filament/resources/css/theme.css';
+.fc-calculator-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fc-calculator-display-wrapper {
+    border: 1px solid rgba(229, 231, 235, 1);
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 1px rgba(3, 7, 18, 0.05);
+    padding: 1rem;
+}
+
+.dark .fc-calculator-display-wrapper {
+    border-color: rgba(63, 63, 70, 0.9);
+    background-color: rgba(24, 24, 27, 0.96);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.fc-calculator-display {
+    border: 1px solid rgba(229, 231, 235, 1);
+    border-radius: 0.75rem;
+    background-color: rgba(249, 250, 251, 1);
+    box-shadow: inset 0 1px 2px 0 rgba(17, 24, 39, 0.05);
+    color: rgba(17, 24, 39, 1);
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    padding: 1rem;
+    text-align: right;
+}
+
+.dark .fc-calculator-display {
+    border-color: rgba(39, 39, 42, 1);
+    background-color: rgba(3, 7, 18, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
+.fc-calculator-error {
+    color: rgba(220, 38, 38, 1);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.dark .fc-calculator-error {
+    color: rgba(248, 113, 113, 1);
+}
+
+.fc-calculator-buttons-grid,
+.fc-calculator-actions-grid {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.fc-calculator-buttons-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.fc-calculator-actions-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fc-calculator-button,
+.fc-calculator-action-button {
+    border-radius: 0.75rem;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.fc-calculator-button:focus-visible,
+.fc-calculator-action-button:focus-visible {
+    outline: 2px solid rgba(132, 204, 22, 1);
+    outline-offset: 2px;
+}
+
+.fc-calculator-button-operator {
+    background-color: rgba(247, 254, 231, 1);
+    border-color: rgba(217, 249, 157, 1);
+    color: rgba(77, 124, 15, 1);
+}
+
+.fc-calculator-button-operator:hover {
+    background-color: rgba(236, 252, 203, 1);
+}
+
+.dark .fc-calculator-button-operator {
+    background-color: rgba(132, 204, 22, 0.1);
+    border-color: rgba(132, 204, 22, 0.3);
+    color: rgba(190, 242, 100, 1);
+}
+
+.dark .fc-calculator-button-operator:hover {
+    background-color: rgba(132, 204, 22, 0.2);
+}
+
+.fc-calculator-button-number {
+    background-color: rgba(255, 255, 255, 1);
+    border-color: rgba(229, 231, 235, 1);
+    color: rgba(55, 65, 81, 1);
+}
+
+.fc-calculator-button-number:hover {
+    background-color: rgba(249, 250, 251, 1);
+}
+
+.dark .fc-calculator-button-number {
+    background-color: rgba(24, 24, 27, 0.96);
+    border-color: rgba(63, 63, 70, 0.7);
+    color: rgba(229, 231, 235, 1);
+}
+
+.dark .fc-calculator-button-number:hover {
+    background-color: rgba(39, 39, 42, 0.96);
+    border-color: rgba(82, 82, 91, 0.82);
+}
+
+.fc-calculator-action-button {
+    background-color: rgba(255, 255, 255, 1);
+    border-color: rgba(254, 202, 202, 1);
+    color: rgba(185, 28, 28, 1);
+}
+
+.fc-calculator-action-button:hover {
+    background-color: rgba(254, 242, 242, 1);
+}
+
+.dark .fc-calculator-action-button {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: rgba(252, 165, 165, 1);
+}
+
+.dark .fc-calculator-action-button:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+}
+
+.fc-calculator-action-button-amber {
+    background-color: rgba(255, 251, 235, 1);
+    border-color: rgba(253, 230, 138, 1);
+    color: rgba(180, 83, 9, 1);
+}
+
+.fc-calculator-action-button-amber:hover {
+    background-color: rgba(254, 243, 199, 1);
+}
+
+.dark .fc-calculator-action-button-amber {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: rgba(252, 211, 77, 1);
+}
+
+.dark .fc-calculator-action-button-amber:hover {
+    background-color: rgba(245, 158, 11, 0.2);
+}
+
+.fc-calculator-action-button-primary {
+    background-color: rgba(247, 254, 231, 1);
+    border-color: rgba(217, 249, 157, 1);
+    color: rgba(77, 124, 15, 1);
+}
+
+.fc-calculator-action-button-primary:hover {
+    background-color: rgba(236, 252, 203, 1);
+}
+
+.dark .fc-calculator-action-button-primary {
+    background-color: rgba(132, 204, 22, 0.1);
+    border-color: rgba(132, 204, 22, 0.3);
+    color: rgba(190, 242, 100, 1);
+}
+
+.dark .fc-calculator-action-button-primary:hover {
+    background-color: rgba(132, 204, 22, 0.2);
+}
+
+.fc-calculator-insert-action {
+    justify-content: center;
+    width: 100%;
+}

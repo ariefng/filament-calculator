@@ -1,70 +1,150 @@
-# :package_description
+# Filament Calculator
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/ariefng/filament-calculator/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ariefng/filament-calculator/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/ariefng/filament-calculator/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/ariefng/filament-calculator/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
 
-<!--delete-->
----
-This repo can be used to scaffold a Filament plugin. Follow these steps to get started:
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Make something great!
----
-<!--/delete-->
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Provides a calculator modal action for Filament `TextInput` fields in panels and standalone forms.
+
+Supports Filament v4 and v5.
+
+![Filament Calculator modal](resources/images/calculator-modal.png)
 
 ## Installation
 
-You can install the package via composer:
+Install the package via Composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require ariefng/filament-calculator
 ```
 
-> [!IMPORTANT]
-> If you have not set up a custom theme and are using Filament Panels follow the instructions in the [Filament Docs](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme) first.
-
-After setting up a custom theme add the plugin's views to your theme css file or your app's css file if using the standalone packages.
-
-```css
-@source '../../../../vendor/:vendor_slug/:package_slug/resources/**/*.blade.php';
-```
-
-You can publish and run the migrations with:
+Publish the package configuration:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+php artisan vendor:publish --tag="filament-calculator-config"
 ```
 
-You can publish the config file with:
+Publish the package translations if you want to customize the labels:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="filament-calculator-translations"
 ```
 
-Optionally, you can publish the views using
+Currently, the package ships with translations for English (`en`) and Indonesian (`id`) only.
+
+Register the package assets with Filament:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-views"
+php artisan filament:assets
 ```
 
-This is the contents of the published config file:
+If you are using Filament Panels, you may also register the plugin in your panel provider:
 
 ```php
-return [
-];
+use Ariefng\FilamentCalculator\CalculatorPlugin;
+use Filament\Panel;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        ->plugin(CalculatorPlugin::make());
+}
 ```
 
 ## Usage
 
+Attach the calculator action to a `TextInput` using `prefixAction()` or `suffixAction()`:
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+use Ariefng\FilamentCalculator\Actions\CalculatorAction;
+use Filament\Forms\Components\TextInput;
+
+TextInput::make('amount')
+    ->suffixAction(CalculatorAction::make());
+```
+
+```php
+TextInput::make('amount')
+    ->prefixAction(CalculatorAction::make());
+```
+
+## Configuration
+
+The published config file looks like this:
+
+```php
+return [
+    'max_digits' => 15,
+
+    'action' => [
+        'icon' => 'heroicon-o-calculator',
+        'color' => 'gray',
+        'modal_width' => 'sm',
+    ],
+
+    'insert_action' => [
+        'color' => 'primary',
+        'icon' => 'heroicon-o-arrow-down-tray',
+        'icon_position' => 'after',
+    ],
+];
+```
+
+Available options:
+
+- `max_digits`: maximum numeric digits allowed in the calculator.
+- `action.icon`: calculator trigger icon. Default: `heroicon-o-calculator`.
+- `action.color`: calculator trigger color. Default: `gray`.
+- `action.modal_width`: modal width. Default: `sm`.
+- `insert_action.color`: insert button color. Default: `primary`.
+- `insert_action.icon`: insert button icon. Default: `heroicon-o-arrow-down-tray`.
+- `insert_action.icon_position`: insert button icon position. Default: `after`.
+
+Example:
+
+```php
+return [
+    'max_digits' => 12,
+
+    'action' => [
+        'icon' => 'heroicon-o-bolt',
+        'color' => 'success',
+        'modal_width' => 'md',
+    ],
+
+    'insert_action' => [
+        'color' => 'danger',
+        'icon' => 'heroicon-o-arrow-left',
+        'icon_position' => 'before',
+    ],
+];
+```
+
+## Styling
+
+In an effort to align with Filament's theming methodology, you will need to use a custom theme to use this plugin.
+
+> [!IMPORTANT]
+> If you have not set up a custom theme and are using Filament Panels, follow the Filament styling documentation for your Filament version first.
+>
+> The following applies to both the Panels package and the standalone Forms package.
+
+After setting up a custom theme, add the plugin's Blade source to your theme CSS file, or to your app CSS file if you are using the standalone Forms package:
+
+```css
+@source '../../../../vendor/ariefng/filament-calculator/resources/views/**/*';
+```
+
+The calculator stylesheet itself is registered through Filament's asset manager and lazy-loaded only when the calculator modal is rendered.
+
+If you update this package locally during development, re-run:
+
+```bash
+php artisan filament:assets
+php artisan optimize:clear
 ```
 
 ## Testing
@@ -72,10 +152,6 @@ echo $variable->echoPhrase('Hello, VendorName!');
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -87,7 +163,7 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Arief Nugraha](https://github.com/ariefng)
 - [All Contributors](../../contributors)
 
 ## License
