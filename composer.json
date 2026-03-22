@@ -1,6 +1,6 @@
 {
     "name": "ariefng/filament-calculator",
-    "description": "Provides a calculator modal action for Filament TextInput fields in panels and standalone forms.",
+    "description": "Provides a calculator modal action for Filament TextInput fields in Filament panel forms.",
     "keywords": [
         "ariefng",
         "laravel",

@@ -26,6 +26,9 @@ it('renders calculator blade with digit limit messaging', function () {
     expect($html)->toContain('data-max-digits="15"')
         ->and($html)->toContain(e(__('filament-calculator::calculator.max_digits_reached', ['max' => 15])))
         ->and($html)->toContain(e(__('filament-calculator::calculator.invalid_expression')))
+        ->and($html)->toContain('--color-50:var(--gray-50)')
+        ->and($html)->toContain('x-ref="displayViewport"')
+        ->and($html)->toContain('syncDisplayViewport()')
         ->and($html)->toContain('calculator-insert-requested')
         ->and($html)->toContain('data-calculator-display');
 });
@@ -56,6 +59,7 @@ it('uses the configured calculator action options', function () {
     config()->set('filament-calculator.insert_action.color', 'danger');
     config()->set('filament-calculator.insert_action.icon', 'heroicon-o-arrow-left');
     config()->set('filament-calculator.insert_action.icon_position', 'before');
+    config()->set('filament-calculator.operator_buttons.color', 'warning');
 
     $action = CalculatorAction::make();
     $reflection = new ReflectionProperty($action, 'extraModalFooterActions');
@@ -70,11 +74,13 @@ it('uses the configured calculator action options', function () {
     };
 
     $insertAction = $extraModalFooterActions($action, $component)[0];
+    $modalContent = $action->getModalContent();
 
     expect($action->getIcon())->toBe('heroicon-o-bolt')
         ->and($action->getColor())->toBe('success')
         ->and($action->getModalWidth())->toBe(Width::Medium)
         ->and($insertAction->getColor())->toBe('danger')
         ->and($insertAction->getIcon())->toBe('heroicon-o-arrow-left')
-        ->and($insertAction->getIconPosition())->toBe(IconPosition::Before);
+        ->and($insertAction->getIconPosition())->toBe(IconPosition::Before)
+        ->and($modalContent->render())->toContain('--color-50:var(--warning-50)');
 });

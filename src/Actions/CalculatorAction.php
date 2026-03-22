@@ -24,6 +24,7 @@ class CalculatorAction extends Action
                 'maxDigits' => $this->getMaxDigits(),
                 'maxDigitsMessage' => __('filament-calculator::calculator.max_digits_reached', ['max' => $this->getMaxDigits()]),
                 'invalidExpressionMessage' => __('filament-calculator::calculator.invalid_expression'),
+                'operatorButtonsColor' => $this->getOperatorButtonsColor(),
             ]))
             ->modalSubmitAction(false)
             ->modalWidth($this->getConfiguredModalWidth())
@@ -64,6 +65,13 @@ class CalculatorAction extends Action
         return (int) config('filament-calculator.max_digits', 15);
     }
 
+    protected function getOperatorButtonsColor(): string | array
+    {
+        $color = config('filament-calculator.operator_buttons.color', 'gray');
+
+        return is_array($color) ? $color : (string) $color;
+    }
+
     protected function getCalculatorIcon(): string
     {
         return (string) config('filament-calculator.action.icon', 'heroicon-o-calculator');
@@ -83,7 +91,7 @@ class CalculatorAction extends Action
 
     protected function getInsertActionColor(): string
     {
-        return (string) config('filament-calculator.insert_action.color', 'primary');
+        return (string) config('filament-calculator.insert_action.color', 'gray');
     }
 
     protected function getInsertActionIcon(): string

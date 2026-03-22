@@ -2,6 +2,7 @@
     'maxDigits' => 15,
     'maxDigitsMessage' => '',
     'invalidExpressionMessage' => '',
+    'operatorButtonsColor' => 'gray',
 ])
 
 <div>
@@ -10,6 +11,7 @@
         data-max-digits="{{ $maxDigits }}"
         data-max-digits-message="{{ $maxDigitsMessage }}"
         data-invalid-expression-message="{{ $invalidExpressionMessage }}"
+        style="{{ \Filament\Support\get_color_css_variables($operatorButtonsColor, [50, 100, 200, 300, 500, 700, 900, 950]) }}"
         x-data="{
             display: '0',
             error: '',
@@ -20,6 +22,17 @@
                 this.maxDigits = Number(this.$el.dataset.maxDigits || 15)
                 this.maxDigitsMessage = this.$el.dataset.maxDigitsMessage || ''
                 this.invalidExpressionMessage = this.$el.dataset.invalidExpressionMessage || ''
+
+                this.$nextTick(() => this.syncDisplayViewport())
+            },
+            syncDisplayViewport() {
+                const viewport = this.$refs.displayViewport
+
+                if (! viewport) {
+                    return
+                }
+
+                viewport.scrollLeft = viewport.scrollWidth
             },
             countDigits(value) {
                 return (value.match(/\d/g) ?? []).length
@@ -69,7 +82,7 @@
                 }
 
                 if (this.display === '0' && value !== '.') {
-                    this.display = value
+                    this.updateDisplay(value)
 
                     return
                 }
@@ -78,20 +91,20 @@
                     const endsInOperator = ['+', '-', '*', '/'].includes(this.display.slice(-1))
 
                     if (endsInOperator) {
-                        this.display = this.display.slice(0, -1) + value
+                        this.updateDisplay(this.display.slice(0, -1) + value)
 
                         return
                     }
                 }
 
-                this.display += value
+                this.updateDisplay(this.display + value)
             },
             clear() {
-                this.display = '0'
+                this.updateDisplay('0')
                 this.error = ''
             },
             backspace() {
-                this.display = this.display.length <= 1 ? '0' : this.display.slice(0, -1)
+                this.updateDisplay(this.display.length <= 1 ? '0' : this.display.slice(0, -1))
                 this.error = ''
             },
             evaluate() {
@@ -99,7 +112,7 @@
                 this.error = ''
 
                 if (expression === '') {
-                    this.display = '0'
+                    this.updateDisplay('0')
 
                     return
                 }
@@ -110,12 +123,12 @@
                     if (Number.isFinite(result)) {
                         if (this.countDigits(String(result)) > this.maxDigits) {
                             this.error = this.maxDigitsMessage
-                            this.display = '0'
+                            this.updateDisplay('0')
 
                             return
                         }
 
-                        this.display = String(result)
+                        this.updateDisplay(String(result))
 
                         return
                     }
@@ -123,19 +136,26 @@
                 }
 
                 this.error = this.invalidExpressionMessage
-                this.display = '0'
+                this.updateDisplay('0')
+            },
+            updateDisplay(value) {
+                this.display = value
+
+                this.$nextTick(() => this.syncDisplayViewport())
             },
         }"
         x-on:calculator-insert-requested.window="insert($event.detail.targetInputId, $event.detail.invalidMessage, $event.detail.maxDigits, $event.detail.maxDigitsMessage)"
         class="fc-calculator-container"
     >
         <div class="fc-calculator-display-wrapper">
-            <div
-                data-calculator-display
-                class="fc-calculator-display"
-                x-text="display"
-            >
-                0
+            <div class="fc-calculator-display-viewport" x-ref="displayViewport">
+                <div
+                    data-calculator-display
+                    class="fc-calculator-display"
+                    x-text="display"
+                >
+                    0
+                </div>
             </div>
 
             <p

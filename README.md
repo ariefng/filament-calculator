@@ -6,7 +6,7 @@ Provides a calculator modal action for Filament `TextInput` fields in Filament A
 
 > **Note:** Supports Filament **v4** and **v5**. For changes and updates, see the [CHANGELOG](CHANGELOG.md).
 
-![Filament Calculator modal](resources/images/filament-calculator-plugin.gif)
+![Filament Calculator plugin](resources/images/filament-calculator-plugin.webp)
 
 ## Table of Contents
 
@@ -34,9 +34,6 @@ Provides a calculator modal action for Filament `TextInput` fields in Filament A
 -   🎨 **Responsive** - Works seamlessly on desktop and mobile
 
 ## Requirements
-
--   PHP 8.2+
--   Laravel 10.0+ (for Panels) or standalone Forms package
 -   Filament 4.0 or 5.0
 
 ## Installation
@@ -76,6 +73,10 @@ public function panel(Panel $panel): Panel
 
 ## Quick Start
 
+Register the plugin in your Filament panel, then attach the calculator action to your form field.
+
+## Usage
+
 Attach the calculator action to a `TextInput` using `prefixAction()` or `suffixAction()`:
 
 ```php
@@ -89,6 +90,24 @@ TextInput::make('amount')
     ->prefixAction(CalculatorAction::make());
 ```
 
+Since `CalculatorAction` extends Filament's default `Action`, you can use any supported action customization methods on it. If you place the calculator inside another Filament modal or slide-over form, you may want the calculator modal to open on top of the parent modal instead of closing and reopening the parent. Filament documents this pattern here:
+
+https://filamentphp.com/docs/5.x/actions/modals#overlaying-child-action-modals-on-top-of-parent-action-modals
+
+Example:
+
+```php
+TextInput::make('amount')
+    ->suffixAction(
+        CalculatorAction::make()
+            ->overlayParentActions()
+    );
+```
+
+Example preview:
+
+![Filament Calculator modal example](resources/images/filament-calculator-plugin.gif)
+
 ## Configuration
 
 The published config file looks like this:
@@ -96,6 +115,10 @@ The published config file looks like this:
 ```php
 return [
     'max_digits' => 15,
+
+    'operator_buttons' => [
+        'color' => 'gray',
+    ],
 
     'action' => [
         'icon' => 'heroicon-o-calculator',
@@ -114,6 +137,7 @@ return [
 Available options:
 
 - `max_digits`: maximum numeric digits allowed in the calculator.
+- `operator_buttons.color`: color alias used by the `+`, `-`, `*`, `/`, and `=` buttons. Default: `gray`.
 - `action.icon`: calculator trigger icon. Default: `heroicon-o-calculator`.
 - `action.color`: calculator trigger color. Default: `gray`.
 - `action.modal_width`: modal width. Default: `sm`.
@@ -126,6 +150,10 @@ Example:
 ```php
 return [
     'max_digits' => 12,
+
+    'operator_buttons' => [
+        'color' => 'warning',
+    ],
 
     'action' => [
         'icon' => 'heroicon-o-bolt',
@@ -147,7 +175,7 @@ The calculator styles are automatically loaded globally - no need to run `php ar
 
 If you need to customize the calculator's appearance, you can override the CSS by publishing the package's views and adding your custom styles to your application's CSS file.
 
-The calculator modal uses Filament's built-in styling system and will automatically match your panel's theme.
+The calculator modal uses Filament's built-in color variables. By default, the operator buttons and evaluate button use the `gray` color alias, and you can switch them to another Filament color alias through `operator_buttons.color`.
 
 ## Testing
 
@@ -167,6 +195,8 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 - [Arief Nugraha](https://github.com/ariefng)
 - [All Contributors](../../contributors)
+
+This plugin was built entirely with Codex.
 
 ## License
 

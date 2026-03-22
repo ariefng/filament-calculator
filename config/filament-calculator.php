@@ -3,6 +3,10 @@
 return [
     'max_digits' => 15,
 
+    'operator_buttons' => [
+        'color' => 'gray',
+    ],
+
     'action' => [
         'icon' => 'heroicon-o-calculator',
         'color' => 'gray',
