@@ -3,6 +3,10 @@
 return [
     'max_digits' => 15,
 
+    'initial_value' => 'field',
+
+    'decimal_separator' => 'locale',
+
     'operator_buttons' => [
         'color' => 'gray',
     ],

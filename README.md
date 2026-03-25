@@ -25,9 +25,11 @@ Provides a calculator modal action for Filament `TextInput` fields in Filament A
 
 ## Features
 
--   🖼️ **Calculator Modal** - Full-featured calculator with basic arithmetic operations
+-   🖼️ **Calculator Modal** - Full-featured calculator with arithmetic, percentage, sign toggle, and live result preview
+-   🔎 **Readable Display** - Shows locale-aware decimal and thousands separators while typing in the calculator modal
+-   🔁 **State Aware Reopen** - Reopens with the current field value, or falls back to a configurable initial value
 -   🔧 **Flexible Attachment** - Attach as prefix or suffix action to any TextInput
--   ⚙️ **Configurable** - Customize icon, color, modal width, and more
+-   ⚙️ **Configurable** - Customize icon, color, modal width, decimal separator, and more
 -   🌐 **Multi-language** - Built-in translations for English and Indonesian
 -   🔢 **Digit Limit** - Configurable maximum digits for input validation
 -   ⚡ **Zero Configuration** - Works out of the box with sensible defaults
@@ -108,6 +110,17 @@ Example preview:
 
 ![Filament Calculator modal example](resources/images/filament-calculator-plugin.gif)
 
+The calculator shows the current expression on the first line and the live computed result on the second line. Both lines use locale-aware thousands and decimal separators in the modal display to keep larger values readable while typing. Pressing `Insert` writes the computed result back to the field, so users do not need to press the equals button first.
+
+When the field already has a value, opening the calculator again will preload that value instead of resetting to `0`. If the field is blank, the calculator falls back to `0`.
+
+When the calculator is used with Filament numeric inputs, the inserted value is normalized before it is written to the field:
+
+- thousands separators are removed
+- decimal separators are converted to `.`
+
+This keeps the inserted value compatible with Filament numeric fields and browser `type="number"` inputs, even if the calculator UI is currently displaying values like `1.000,50`.
+
 ## Configuration
 
 The published config file looks like this:
@@ -115,6 +128,10 @@ The published config file looks like this:
 ```php
 return [
     'max_digits' => 15,
+
+    'initial_value' => 'field',
+
+    'decimal_separator' => 'locale',
 
     'operator_buttons' => [
         'color' => 'gray',
@@ -137,6 +154,8 @@ return [
 Available options:
 
 - `max_digits`: maximum numeric digits allowed in the calculator.
+- `initial_value`: controls how the calculator starts. Use `'field'` to preload the current field value and fall back to `0` when blank, or use `0` / `'zero'` to always start from `0`. Default: `'field'`.
+- `decimal_separator`: controls the decimal separator used by the calculator. Use `'locale'` to follow the current app locale automatically, `'.'` / `'dot'` to force a dot, or `','` / `'comma'` to force a comma.
 - `operator_buttons.color`: color alias used by the `+`, `-`, `*`, `/`, and `=` buttons. Default: `gray`.
 - `action.icon`: calculator trigger icon. Default: `heroicon-o-calculator`.
 - `action.color`: calculator trigger color. Default: `gray`.
@@ -150,6 +169,10 @@ Example:
 ```php
 return [
     'max_digits' => 12,
+
+    'initial_value' => 'zero',
+
+    'decimal_separator' => ',',
 
     'operator_buttons' => [
         'color' => 'warning',
@@ -177,6 +200,14 @@ If you need to customize the calculator's appearance, you can override the CSS b
 
 The calculator modal uses Filament's built-in color variables. By default, the operator buttons and evaluate button use the `gray` color alias, and you can switch them to another Filament color alias through `operator_buttons.color`.
 
+Decimal separator behavior follows the active locale by default. For example, `id` locales use `,` while `en` locales use `.`. The calculator display also applies locale-aware thousands separators while values are being entered. You can override the decimal behavior through the `decimal_separator` config option.
+
+The grouped formatting is display-only inside the calculator modal. Inserted values are always written back as plain numeric strings without thousands separators, and comma decimals are normalized to dots before dispatching the input and change events.
+
+When reopening the calculator, the current field value is preferred when `initial_value` is set to `'field'`. If you prefer a clean calculator every time, set `initial_value` to `0` or `'zero'`.
+
+Calculator insertion also supports `TextInput` components inside Filament `Repeater` items by targeting the field's unique state path instead of relying only on the DOM input id.
+
 ## Testing
 
 ```bash
@@ -190,6 +221,17 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 ## Security Vulnerabilities
 
 Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
+
+Security summary from a Claude Opus 4.6 code review:
+
+| Category | Status |
+| --- | --- |
+| XSS | No vulnerabilities |
+| Code injection | Protected (custom parser, no eval) |
+| CSRF | N/A (no server-side mutations) |
+| Input validation | Proper (max digits, whitelisted separators) |
+
+This summary is informational and does not replace responsible disclosure. If you discover a vulnerability, please report it through the security policy linked above.
 
 ## Credits
 

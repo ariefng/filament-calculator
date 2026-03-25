@@ -5,6 +5,7 @@ namespace Ariefng\FilamentCalculator\Actions;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Enums\IconPosition;
+use Filament\Support\Enums\Size;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Js;
 
@@ -17,14 +18,25 @@ class CalculatorAction extends Action
         $this
             ->icon($this->getCalculatorIcon())
             ->color($this->getCalculatorColor())
+            ->actionJs(fn (): string => <<<'JS'
+                window.filamentCalculatorOriginInput = $el.closest('.fi-input-wrp')?.querySelector('input') ?? null
+
+                JS
+                . '; ' . $this->getJsClickHandler())
             ->tooltip(__('filament-calculator::calculator.title'))
             ->modalHeading(__('filament-calculator::calculator.title'))
             ->modalDescription(__('filament-calculator::calculator.description'))
-            ->modalContent(view('filament-calculator::action.calculator-action', [
+            ->modalContent(fn (TextInput $component) => view('filament-calculator::action.calculator-action', [
                 'maxDigits' => $this->getMaxDigits(),
                 'maxDigitsMessage' => __('filament-calculator::calculator.max_digits_reached', ['max' => $this->getMaxDigits()]),
                 'invalidExpressionMessage' => __('filament-calculator::calculator.invalid_expression'),
                 'operatorButtonsColor' => $this->getOperatorButtonsColor(),
+                'decimalSeparator' => $this->getConfiguredDecimalSeparator(),
+                'defaultValue' => $this->getConfiguredInitialValue(),
+                'currentValue' => $this->resolveComponentValue($component),
+                'locale' => app()->getLocale(),
+                'targetInputId' => $this->resolveTargetInputId($component),
+                'targetInputStatePath' => $this->resolveTargetInputStatePath($component),
             ]))
             ->modalSubmitAction(false)
             ->modalWidth($this->getConfiguredModalWidth())
@@ -34,22 +46,19 @@ class CalculatorAction extends Action
                     ->color($this->getInsertActionColor())
                     ->icon($this->getInsertActionIcon())
                     ->iconPosition($this->getInsertActionIconPosition())
+                    ->size(Size::Large)
                     ->extraAttributes(['class' => 'fc-calculator-insert-action'])
                     ->actionJs(sprintf(
                         <<<'JS'
                         window.dispatchEvent(new CustomEvent('calculator-insert-requested', {
                             detail: {
                                 targetInputId: %s,
-                                invalidMessage: %s,
-                                maxDigits: %s,
-                                maxDigitsMessage: %s,
+                                targetInputStatePath: %s,
                             },
                         }))
                         JS,
                         Js::from($this->resolveTargetInputId($component))->toHtml(),
-                        Js::from(__('filament-calculator::calculator.finish_before_insert'))->toHtml(),
-                        Js::from($this->getMaxDigits())->toHtml(),
-                        Js::from(__('filament-calculator::calculator.max_digits_reached', ['max' => $this->getMaxDigits()]))->toHtml(),
+                        Js::from($this->resolveTargetInputStatePath($component))->toHtml(),
                     )),
             ])
             ->modalCancelAction(false);
@@ -63,6 +72,28 @@ class CalculatorAction extends Action
     protected function getMaxDigits(): int
     {
         return (int) config('filament-calculator.max_digits', 15);
+    }
+
+    protected function getConfiguredInitialValue(): string
+    {
+        $value = config('filament-calculator.initial_value', 'field');
+
+        return match ($value) {
+            0, '0', 'zero' => '0',
+            default => 'field',
+        };
+    }
+
+    protected function getConfiguredDecimalSeparator(): ?string
+    {
+        $separator = config('filament-calculator.decimal_separator');
+
+        return match ($separator) {
+            '.', 'dot' => '.',
+            ',', 'comma' => ',',
+            'locale', null => null,
+            default => null,
+        };
     }
 
     protected function getOperatorButtonsColor(): string | array
@@ -115,5 +146,23 @@ class CalculatorAction extends Action
         }
 
         return $id;
+    }
+
+    protected function resolveComponentValue(TextInput $component): string | int | float | null
+    {
+        $value = $component->getState();
+
+        return is_scalar($value) || $value === null ? $value : null;
+    }
+
+    protected function resolveTargetInputStatePath(TextInput $component): ?string
+    {
+        $statePath = $component->getStatePath();
+
+        if (blank($statePath)) {
+            return null;
+        }
+
+        return $statePath;
     }
 }
