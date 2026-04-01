@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-04-01
+
+### Fixed
+- Prefixed the calculator action click handler with `$wire.` so the action mounts correctly in Filament 5 with Livewire 4 outside modal-triggered contexts.
+
 ## [1.2.0] - 2026-03-25
 
 ### Changed

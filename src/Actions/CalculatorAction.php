@@ -22,7 +22,7 @@ class CalculatorAction extends Action
                 window.filamentCalculatorOriginInput = $el.closest('.fi-input-wrp')?.querySelector('input') ?? null
 
                 JS
-                . '; ' . $this->getJsClickHandler())
+                . '; $wire.' . $this->getJsClickHandler())
             ->tooltip(__('filament-calculator::calculator.title'))
             ->modalHeading(__('filament-calculator::calculator.title'))
             ->modalDescription(__('filament-calculator::calculator.description'))

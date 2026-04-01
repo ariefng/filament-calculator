@@ -14,7 +14,8 @@ it('configures the calculator action modal', function () {
         ->and($action->getModalDescription())->toBe(__('filament-calculator::calculator.description'))
         ->and($action->getIcon())->toBe('heroicon-o-calculator')
         ->and($action->getColor())->toBe('gray')
-        ->and($action->getModalWidth())->toBe(Width::Small);
+        ->and($action->getModalWidth())->toBe(Width::Small)
+        ->and($action->getAlpineClickHandler())->toContain('$wire.mountAction(\'calculator\'');
 });
 
 it('renders calculator blade with digit limit messaging', function () {
