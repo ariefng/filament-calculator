@@ -1,6 +1,7 @@
 # Filament Calculator
 
 [![Latest Version](https://img.shields.io/packagist/v/ariefng/filament-calculator.svg?style=flat-square)](https://packagist.org/packages/ariefng/filament-calculator)
+[![Plumb score](https://plumbphp.dev/badges/ariefng/filament-calculator/composite.svg)](https://plumbphp.dev/ariefng/filament-calculator)
 
 Provides a calculator modal action for Filament `TextInput` fields in Filament Admin Panel.
 
